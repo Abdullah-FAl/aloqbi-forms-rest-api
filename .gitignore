@@ -3,3 +3,4 @@ logs/*
 public/uploads/*
 .idea/*
 composer.lock
+.DS_Store
