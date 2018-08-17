@@ -1,0 +1,5 @@
+vendor/*
+logs/*
+public/uploads/*
+.idea/*
+composer.lock
