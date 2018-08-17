@@ -6,10 +6,10 @@ $_ENV["appname"]='altaqyim';
 
  class dbConnect {
         // Properties
-        private $dbhost = '';
-        private $dbuser = '';
-        private $dbpass = '';
-        private $dbname = '';
+        private $dbhost = 'localhost';
+        private $dbuser = 'root';
+        private $dbpass = 'root';
+        private $dbname = 'altaqyim';
          
 
         // Connect
