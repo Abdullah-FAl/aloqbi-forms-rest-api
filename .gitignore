@@ -1,6 +1,7 @@
 vendor/*
 logs/*
 public/uploads/*
+bootstrap/config/db/*
 .idea/*
 composer.lock
 .DS_Store
