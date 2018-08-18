@@ -87,6 +87,6 @@ require  ('../src/routes/REvaluationResults.php');
  * 
  * 
  */
-
-require  ('../src/middleware/auth.php');
 require  ('../src/middleware/Headers.php');
+require  ('../src/middleware/auth.php');
+
