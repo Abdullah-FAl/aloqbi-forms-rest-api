@@ -8,7 +8,7 @@ require  ('../vendor/autoload.php');
 
 
 
-$environment = 'prod';
+$environment = 'div';
 
 if($environment === 'div'){
 

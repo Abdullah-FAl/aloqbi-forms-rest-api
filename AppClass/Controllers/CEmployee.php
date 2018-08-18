@@ -22,29 +22,13 @@ class CEmployee extends Base
 
 
 
-    public function GetAllEmployeeInfo   ($request,$response)
-    {
+    public function GetAllEmployeeInfo   ($request,$response){
 
         /*=================={Bring the user data from a database}================*/
 
 
-//        employee_id": null,
-//        "employee_name": "مهند صبيح",
-//        "employee_number": "0",
-//        "employee_job_name": "",
-//        "employee_email": "",
-//        "employee_phone_number": "0",
-//        "file_id": null,
-//        "file_name": null,
-//        "file_type": null,
-//        "file_path": null
-//
 
-$sql = "SELECT TEpm.employee_id,TEpm.employee_name ,TEpm.employee_number,TEpm.employee_job_name,
-            TEpm.employee_email,TEpm.employee_phone_number, IFNULL(TEpmF.file_path,'') AS file_path
-                FROM employee AS TEpm 
-                  LEFT OUTER JOIN employee_files AS TEpmF ON TEpm.employee_id = TEpmF.employee_id  
-                 GROUP BY  TEpm.employee_id";
+$sql = "SELECT TEpm.employee_id,TEpm.employee_name ,TEpm.employee_number,TEpm.employee_job_name,TEpm.employee_email,TEpm.employee_phone_number, IFNULL(TEpmF.file_path,'') AS file_path FROM employee AS TEpm LEFT OUTER JOIN employee_files AS TEpmF ON TEpm.employee_id = TEpmF.employee_id  GROUP BY  TEpm.employee_id";
 
         // Get DB Object
         $db = $this->db;
@@ -166,14 +150,6 @@ $sql = "SELECT TEpm.employee_id,TEpm.employee_name ,TEpm.employee_number,TEpm.em
          $uploadedFiles = $request->getUploadedFiles();
          $parsedBody = $request->getParsedBody();
 
-//        employeeimgfile
-//        employee_id
-//        employee_name
-//        employee_number
-//        employee_job_name
-//        employee_tasks_id
-//        employee_email
-//        employee_phone_number
         /*=================={Bring the user data from a database}================*/
 
 
@@ -373,24 +349,11 @@ $sql = "SELECT TEpm.employee_id,TEpm.employee_name ,TEpm.employee_number,TEpm.em
 
     private  function   addEmployeeFiles($uploadedFilesarry,$epmID){
 
-      //  var_dump($uploadedFilesarry,$epmID);
+
 
         if (!empty($uploadedFilesarry['employeeimgfile'])) {
 
-            //     ["file"]=>  string(36)
-//     ["name":protected]=>   string(10) "sheikh.png"
-//     ["type":protected]=>   string(9) "image/png"
-//     ["size":protected]=>   int(2458892)
-//     ["error":protected]=>  int(0)
-//     ["sapi":protected]=>   bool(true)
-//     ["stream":protected]=> NULL
-//     ["moved":protected]=>  bool(false)
 
-// getStream()
-// getSize()
-// getError()
-// getClientFilename()
-// getClientMediaType()
 
 
 
@@ -430,9 +393,7 @@ $sql = "SELECT TEpm.employee_id,TEpm.employee_name ,TEpm.employee_number,TEpm.em
 
 
 
-                }
-
-            }
+                }}
 
         }else {
 
