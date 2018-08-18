@@ -28,20 +28,23 @@ class CEmployee extends Base
 
 
 
-$sql = "";
+$sql = "SELECT TEpm.employee_id,TEpm.employee_name ,TEpm.employee_number,TEpm.employee_job_name,TEpm.employee_email,TEpm.employee_phone_number, 
+                IFNULL(TEpmF.file_path,'') AS file_path FROM employee AS TEpm 
+                LEFT OUTER JOIN employee_files AS TEpmF ON TEpm.employee_id = TEpmF.employee_id  
+                GROUP BY  TEpm.employee_id";
 
-        // Get DB Object
-        $db = $this->db;
-        // Connect
-        $db = $db->connect();
-        //sql prepare
-        $stmt = $db->prepare($sql);
-        $stmt->execute();
-        $sql_result = $stmt->fetchall();
-        // exit Connect
-        $db = null;
+        // // Get DB Object
+        // $db = $this->db;
+        // // Connect
+        // $db = $db->connect();
+        // //sql prepare
+        // $stmt = $db->prepare($sql);
+        // $stmt->execute();
+        // $sql_result = $stmt->fetchall();
+        // // exit Connect
+        // $db = null;
 
-
+        $sql_result = 'ok';
         return $response->withJson($sql_result,200);
 
     }
