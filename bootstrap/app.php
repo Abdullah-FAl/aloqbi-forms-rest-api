@@ -10,7 +10,7 @@ require  ('../vendor/autoload.php');
 
 $environment = 'prod';
 
-if($environment === 'prod'){
+if($environment === 'div'){
 
     require  (__DIR__ .'/config/db/local.db.php');
 
