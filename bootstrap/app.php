@@ -62,8 +62,8 @@ $container['upload_directory'] =  $_SERVER['DOCUMENT_ROOT'] . '/uploads';
  * 
  * 
  */
-require  ('../src/middleware/Headers.php');
-require  ('../src/routes/RLogin.php');
+
+
 
 require  ('../src/routes/RUsers.php');
 
@@ -90,3 +90,6 @@ require  ('../src/routes/REvaluationResults.php');
 
 require  ('../src/middleware/auth.php');
 
+require  ('../src/middleware/Headers.php');
+
+require  ('../src/routes/RLogin.php');
