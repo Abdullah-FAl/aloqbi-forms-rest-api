@@ -28,10 +28,7 @@ class CEmployee extends Base
 
 
 
-$sql = "SELECT TEpm.employee_id,TEpm.employee_name ,TEpm.employee_number,TEpm.employee_job_name,TEpm.employee_email,TEpm.employee_phone_number, 
-                TEpmF.file_path FROM employee AS TEpm 
-                LEFT  JOIN employee_files AS TEpmF ON TEpm.employee_id = TEpmF.employee_id  
-                GROUP BY  TEpm.employee_id";
+$sql = "";
 
         // Get DB Object
         $db = $this->db;
