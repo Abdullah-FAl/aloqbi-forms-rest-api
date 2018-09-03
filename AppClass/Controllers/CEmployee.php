@@ -27,6 +27,8 @@ class CEmployee extends Base
         /*=================={Bring the user data from a database}================*/
 
 
+        $SERVER_path = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]" . "$_SERVER[CONTEXT_PREFIX]";
+        $ifnull= "";
 
 $sql2 = "SELECT TEpm.employee_id,
                 TEpm.employee_name ,
@@ -34,8 +36,9 @@ $sql2 = "SELECT TEpm.employee_id,
                 TEpm.employee_job_name,
                 TEpm.employee_email,
                 TEpm.employee_phone_number, 
-                IFNULL(TEpmF.file_path,'') AS file_path FROM employee AS TEpm 
+                LOWER(CONCAT('$SERVER_path',COALESCE(TEpmF.file_path, '')))  AS file_path FROM employee AS TEpm 
                 LEFT  JOIN employee_files AS TEpmF ON TEpmF.employee_id = TEpm.employee_id  
+               
                 GROUP BY  TEpm.employee_id";
 
         // Get DB Object
@@ -49,7 +52,12 @@ $sql2 = "SELECT TEpm.employee_id,
          // exit Connect
         $db = null;
 
+       
     
+
+
+
+
         return $response->withJson($sql_result,200);
 
     }
@@ -368,7 +376,7 @@ $sql2 = "SELECT TEpm.employee_id,
 
 
         $userData = $request->getParsedBody();
-
+        $epmID = (int) $userData['employee_id'];
 
         /*=================={Bring the user data from a database}================*/
 
@@ -383,9 +391,11 @@ $sql2 = "SELECT TEpm.employee_id,
         $db = $db->connect();
         //sql prepare
         $stmt = $db->prepare($sql);
-        $sql_result = $stmt->execute([$userData['employee_id']]);
+        $sql_result = $stmt->execute([$epmID]);
         // exit Connect
         $db = null;
+
+        $this->deleteEmployeeFiles($epmID);
 
 
         return $response->withJson($sql_result , 202);
@@ -407,7 +417,7 @@ $sql2 = "SELECT TEpm.employee_id,
 
 
 
-    //// add epm img
+    //// add epm img !!!
     ///
 
     private  function   addEmployeeFiles($uploadedFilesarry,$epmID){
@@ -416,47 +426,42 @@ $sql2 = "SELECT TEpm.employee_id,
 
         if (!empty($uploadedFilesarry['employeeimgfile'])) {
 
+                // handle single input with multiple file uploads
+                foreach ($uploadedFilesarry['employeeimgfile'] as $uploadedfile) {
+                            
+                    if ($uploadedfile->getError() === UPLOAD_ERR_OK) {
+
+                        $md5Hash = md5($epmID.time());
+                        $directory = $this->upload_directory;
+                        $file_name = $uploadedfile->getClientFilename();
+                        $parts     = explode('.', $file_name);
+                        $file_ext  = end($parts);
+                        $uploadedfile->moveTo(  realpath($directory). '/employee/img/' . $md5Hash . $epmID .'.'.$file_ext);
+                        $file_type = $uploadedfile->getClientMediaType();
+                        $directoryroot = "/uploads/employee/img/";
+                        $file_path = $directoryroot . $md5Hash . $epmID .'.'.$file_ext;
+
+                            
+                        // Get DB Object
+                        $db = $this->db;
+                        // Connect
+                        $db = $db->connect();
+
+                        $sql4 = "INSERT INTO employee_files (employee_id,file_name,file_type,file_path)
+                                VALUES (:emp_id,:f_name,:f_type,:f_path)";
+
+
+                        //sql prepare
+                        $stmt = $db->prepare($sql4);
+                        $stmt->bindParam(':emp_id', $epmID);
+                        $stmt->bindParam(':f_name', $file_name);
+                        $stmt->bindParam(':f_type', $file_type);
+                        $stmt->bindParam(':f_path', $file_path);
+                        $sql_result = $stmt->execute();
 
 
 
-
-
-            // handle single input with multiple file uploads
-            foreach ($uploadedFilesarry['employeeimgfile'] as $uploadedfile) {
-
-                if ($uploadedfile->getError() === UPLOAD_ERR_OK) {
-
-                    $md5Hash = md5(time());
-                    $directory = $this->upload_directory;
-                    $file_name = $uploadedfile->getClientFilename();
-                    $parts     = explode('.', $file_name);
-                    $file_ext  = end($parts);
-                    $uploadedfile->moveTo($directory . '/employee/img/' . $md5Hash . $epmID .'.'.$file_ext);
-                    $file_type = $uploadedfile->getClientMediaType();
-                    $SERVER_path = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]/uploads/employee/img/";
-                    $file_path = $SERVER_path . $md5Hash . $epmID .'.'.$file_ext;
-
-
-                    // Get DB Object
-                    $db = $this->db;
-                    // Connect
-                    $db = $db->connect();
-
-
-                    $sql4 = "INSERT INTO employee_files (employee_id,file_name,file_type,file_path)
-                              VALUES (:emp_id,:f_name,:f_type,:f_path)";
-
-                    //sql prepare
-                    $stmt = $db->prepare($sql4);
-                    $stmt->bindParam(':emp_id', $epmID);
-                    $stmt->bindParam(':f_name', $file_name);
-                    $stmt->bindParam(':f_type', $file_type);
-                    $stmt->bindParam(':f_path', $file_path);
-                    $sql_result = $stmt->execute();
-
-
-
-                }}
+                    }}
 
         }else {
 
@@ -511,33 +516,33 @@ $sql2 = "SELECT TEpm.employee_id,
             // handle single input with multiple file uploads
                             foreach ($uploadedFilesarry['employeeimgfile'] as $uploadedfile) {
                                 if ($uploadedfile->getError() === UPLOAD_ERR_OK) {
-                                    $md5Hash = md5(time());
+                                    $md5Hash = md5($epmID.time());
                                     $directory = $this->upload_directory;
                                     $file_name = $uploadedfile->getClientFilename();
                                     $parts     = explode('.', $file_name);
                                     $file_ext  = end($parts);
-                                    $uploadedfile->moveTo($directory . '/employee/img/' . $md5Hash . $epmID .'.'.$file_ext);
+                                    $uploadedfile->moveTo(  realpath($directory. '/employee/img/' . $md5Hash . $epmID .'.'.$file_ext));
                                     $file_type = $uploadedfile->getClientMediaType();
-                                    $SERVER_path = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]/uploads/employee/img/";
-                                    $file_path = $SERVER_path . $md5Hash . $epmID .'.'.$file_ext;
-
+                                    $directoryroot = "/uploads/employee/img/";
+                                    $file_path = $directoryroot . $md5Hash . $epmID .'.'.$file_ext;
+                
                                     $sql2 = "UPDATE  employee_files 
-                    SET 
-                    file_name              = :f_name, 
-                    file_type              = :f_type,
-                    file_path              = :f_path
-                    WHERE employee_id      = :emp_id";
+                                                SET 
+                                                file_name              = :f_name, 
+                                                file_type              = :f_type,
+                                                file_path              = :f_path
+                                                WHERE employee_id      = :emp_id";
 
 
 
 
-                                    //sql prepare
-                                    $stmt = $db->prepare($sql2);
-                                    $stmt->bindParam(':emp_id', $epmID);
-                                    $stmt->bindParam(':f_name', $file_name);
-                                    $stmt->bindParam(':f_type', $file_type);
-                                    $stmt->bindParam(':f_path', $file_path);
-                                    $sql_result = $stmt->execute();
+                                                //sql prepare
+                                                $stmt = $db->prepare($sql2);
+                                                $stmt->bindParam(':emp_id', $epmID);
+                                                $stmt->bindParam(':f_name', $file_name);
+                                                $stmt->bindParam(':f_type', $file_type);
+                                                $stmt->bindParam(':f_path', $file_path);
+                                                $sql_result = $stmt->execute();
                                 }
                             }
                         }
@@ -551,15 +556,15 @@ $sql2 = "SELECT TEpm.employee_id,
             
                             if ($uploadedfile->getError() === UPLOAD_ERR_OK) {
             
-                                $md5Hash = md5(time());
+                                $md5Hash = md5($epmID.time());
                                 $directory = $this->upload_directory;
                                 $file_name = $uploadedfile->getClientFilename();
                                 $parts     = explode('.', $file_name);
                                 $file_ext  = end($parts);
-                                $uploadedfile->moveTo($directory . '/employee/img/' . $md5Hash . $epmID .'.'.$file_ext);
+                                $uploadedfile->moveTo(  realpath($directory). '/employee/img/' . $md5Hash . $epmID .'.'.$file_ext);
                                 $file_type = $uploadedfile->getClientMediaType();
-                                $SERVER_path = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]/uploads/employee/img/";
-                                $file_path = $SERVER_path . $md5Hash . $epmID .'.'.$file_ext;
+                                $directoryroot = "/uploads/employee/img/";
+                                $file_path = $directoryroot . $md5Hash . $epmID .'.'.$file_ext;
             
             
             
@@ -600,6 +605,69 @@ $sql2 = "SELECT TEpm.employee_id,
 
         return $sql_result;
     }
+
+
+
+
+
+
+
+
+
+ //// updeat epm img
+    ///
+
+    private  function   deleteEmployeeFiles($epmID){
+
+
+               // Get DB Object
+        $db = $this->db;
+        // Connect
+        $db = $db->connect();
+
+        $sql1 = "SELECT file_path FROM employee_files WHERE employee_id = ?";
+        //sql prepare
+        $stmt = $db->prepare($sql1);
+        $stmt->execute([$epmID]);
+        $sql_result4 = $stmt->fetch();
+          
+        if ($sql_result4) {
+            $parts     = explode('/', $sql_result4->file_path);
+            $file_name  = end($parts);
+            $directory = $this->upload_directory;
+            $file_for_delete =  realpath($directory). '/employee/img/'. $file_name;
+
+
+            if (file_exists($file_for_delete)) {
+                if (unlink($file_for_delete)) {
+                   
+                    $sql2 = "DELETE  FROM employee_files WHERE employee_id = ?";
+                    //sql prepare
+                    $stmt = $db->prepare($sql2);
+                    $res =  $stmt->execute([$epmID]);
+
+                    $sql3 = "DELETE  FROM employee_tasks WHERE employee_id = ?";
+                    //sql prepare
+                    $stmt = $db->prepare($sql3);
+                    $res =  $stmt->execute([$epmID]);
+                    $db = null;
+                }
+            }
+
+
+
+
+        }
+    
+       
+        return $res;
+    }
+
+
+
+
+
+
 
 
 
