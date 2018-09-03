@@ -28,7 +28,8 @@ class CEmployee extends Base
 
 
         $SERVER_path = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]" . "$_SERVER[CONTEXT_PREFIX]";
-        $ifnull= "";
+        
+        var_dump($_SERVER);
 
 $sql2 = "SELECT TEpm.employee_id,
                 TEpm.employee_name ,
