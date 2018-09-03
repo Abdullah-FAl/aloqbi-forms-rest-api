@@ -49,7 +49,9 @@ $app = new \Slim\App($c);
 
 $container = $app->getContainer();
 $container['db'] = new dbConnect();
-$container['upload_directory'] =  $_SERVER['DOCUMENT_ROOT'] . '/uploads';
+
+$supdir = str_replace("/index.php","/uploads",$_SERVER['SCRIPT_FILENAME']);
+$container['upload_directory'] =  $supdir;
 
 /**
  * 

@@ -30,7 +30,7 @@ class CEmployee extends Base
         $CONTEXT_PREFIX  =  str_replace("/index.php","",$_SERVER['PHP_SELF']);
         $SERVER_path = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]" . "$CONTEXT_PREFIX";
         
-        var_dump($_SERVER);
+       
 
 $sql2 = "SELECT TEpm.employee_id,
                 TEpm.employee_name ,
