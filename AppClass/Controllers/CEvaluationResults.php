@@ -34,7 +34,7 @@ class CEvaluationResults extends Base
 
 
 
-        $sql = "SELECT Emp.employee_id,	employee_name,employee_number,jobـname,  count(e_results) as count_results, e_results ,
+        $sql = "SELECT Emp.employee_id,	employee_name,employee_number,employee_job_name,  count(e_results) as count_results, e_results ,
         evaluation_date,DATE_FORMAT(evaluation_date, \"%Y-%m\") as evaluation_dateMon   FROM quick_evaluation_results AS quick 
            INNER JOIN employee AS Emp  ON Emp.employee_id = quick.employee_id
            WHERE Emp.employee_id = ? 
