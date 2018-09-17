@@ -230,7 +230,7 @@ $user=array(
                     $ip = 'ip=>'.$this->getRealIpAddr();
 
 			$payload = array (
-                    'iss' => $_SERVER[HTTP_HOST],///The issuer of the token // Configures the issuer (iss claim)                
+                    'iss' => $_SERVER['HTTP_HOST'],///The issuer of the token // Configures the issuer (iss claim)                
                     'aud' => $Audience_link,        /// The audience of the token // Configures the audience (aud claim)
                     'iat' => (int) date($time_now_seconds), // Time when token was created 	Issued-at time // Configures the time that the token was issue (iat claim)
                     'nbf'=> $time_now_seconds,
