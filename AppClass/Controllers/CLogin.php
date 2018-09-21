@@ -194,8 +194,7 @@ if( $sql_result[0]->user_name !== $user_name){
 
 
 protected function getnewToken($userdata){
-    $_ENV["tokenapi"]=md5(time().rand());
-    $key = $_ENV["tokenapi"];
+
 $user=array(
     'user_id'=>   $userdata[0]->user_id,
     'user_name'=> $userdata[0]->user_name,
@@ -249,7 +248,8 @@ $user=array(
 
 
 
-
+            $_ENV["tokenapi"]= (string) md5(time().rand());
+            $key = $_ENV["tokenapi"];
 
 $jwt= JWT::encode ($payload,$key);
 

@@ -1,8 +1,11 @@
 Options All -Indexes
  
 RewriteEngine on
+RewriteBase /api.altaqyim/ 
 RewriteCond %{HTTP:Authorization} ^(.*)
 RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+RewriteCond %{THE_REQUEST} !HTTP/1.1$
+RewriteRule .* - [F]
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule . index.php [L]
+RewriteRule ^ index.php [QSA,L] 
