@@ -194,7 +194,8 @@ if( $sql_result[0]->user_name !== $user_name){
 
 
 protected function getnewToken($userdata){
-
+    $_ENV["tokenapi"]=md5(time().rand());
+    $key = $_ENV["tokenapi"];
 $user=array(
     'user_id'=>   $userdata[0]->user_id,
     'user_name'=> $userdata[0]->user_name,
@@ -207,7 +208,7 @@ $user=array(
 
 /*=================={token}================*/      
             // Get your service account's email address and private key from the JSON key file  
-            $key = $_ENV["tokenapi"];
+
 
             $alg ='HS512';
             $service_account_email = "abdullahfal@aloqbi.com";
