@@ -248,7 +248,7 @@ $user=array(
 
 
 
-            $_ENV["tokenapi"]= (string) md5(time().rand());
+           
             $key = $_ENV["tokenapi"];
 
 $jwt= JWT::encode ($payload,$key);

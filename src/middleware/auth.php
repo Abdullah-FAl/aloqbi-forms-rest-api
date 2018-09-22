@@ -13,7 +13,7 @@ use Firebase\JWT\JWT;
 $app->add(new \Slim\Middleware\JwtAuthentication([
     "secure" => false,
     "path" => ["/api/v1"],
-    "passthrough" => ["/api/v1/login", "/admin/ping"],
+    "passthrough" => ["/api/auth/login", "/"],
     "secret" => $_ENV["tokenapi"],
 
     "error" => function ($request, $response, $arguments) {
